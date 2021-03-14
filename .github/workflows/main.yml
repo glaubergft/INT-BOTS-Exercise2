@@ -9,6 +9,7 @@ jobs:
   testAllModes:
     name: Test in ${{ matrix.testMode }}
     runs-on: ubuntu-latest
+    container: unityci/editor:2020.1.14f1-windows-mono-0
     strategy:
       fail-fast: false
       matrix:
