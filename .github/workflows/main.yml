@@ -17,18 +17,6 @@ jobs:
         testMode:
           - editmode
     steps:
-      # - name: Install add-apt-repository command
-        # run: apt-get install -y software-properties-common
-      # - name: Configure git command repository
-        # run: add-apt-repository ppa:git-core/ppa
-      # - name: Update git
-        # run: apt-get update
-      # - name: Upgrade git
-        # run: apt-get upgrade -y git
-      # - name: Install git
-        # run: apt-get install -y git
-      # - name: DOCKER FIX
-        # run: curl -fsSL https://get.docker.com -o get-docker.sh && chmod +x get-docker.sh && sh get-docker.sh
       - uses: actions/checkout@v2
         with:
           lfs: true
@@ -40,6 +28,7 @@ jobs:
           artifactsPath: ${{ matrix.testMode }}-artifacts
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           checkName: ${{ matrix.testMode }} Test Results
+          customParameters: '-nographics'
       - uses: actions/upload-artifact@v2
         if: always()
         with:
