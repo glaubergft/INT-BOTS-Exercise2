@@ -4,6 +4,7 @@ on: [push]
 
 env:
     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+    UNITY_LICENSE_FILE
         
 jobs:
   testAllModes:
@@ -67,11 +68,6 @@ jobs:
         # - name: Activate Unity
           # run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/Unity_v2020.x.ulf || exit 0
         
-        # # Run unit tests
-        # - uses: game-ci/unity-test-runner@v2
-          # with:
-            # githubToken: ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }}
-            
         # # Build Windows
         # - name: Build Windows Player
           # run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -buildWindows64Player ./bin-win64/INTBOTS.exe
