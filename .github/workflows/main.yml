@@ -18,6 +18,8 @@ jobs:
           - editmode
     steps:
       - name: Update git
+        run: apt-get update git
+      - name: Upgrade git
         run: apt-get upgrade -y git
       - uses: actions/checkout@v2
         with:
