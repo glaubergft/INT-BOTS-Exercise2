@@ -1,6 +1,45 @@
 name: CI
+
 on: [push]
+
+env:
+    UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        
 jobs:
+  testAllModes:
+    name: Test in ${{ matrix.testMode }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        testMode:
+          - playmode
+          - editmode
+      steps:
+      - uses: actions/checkout@v1
+        with:
+          lfs: true
+      - uses: actions/cache@v1
+        with:
+          path: ${{ matrix.projectPath }}/Library
+          key: Library-${{ matrix.projectPath }}
+          restore-keys: |
+            Library-
+      - uses: game-ci/unity-test-runner@v1
+        id: tests
+        with:
+          projectPath: ${{ matrix.projectPath }}
+          testMode: ${{ matrix.testMode }}
+          artifactsPath: ${{ matrix.testMode }}-artifacts
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: ${{ matrix.testMode }} Test Results
+      - uses: actions/upload-artifact@v1
+        if: always()
+        with:
+          name: Test results for ${{ matrix.testMode }}
+          path: ${{ steps.tests.outputs.artifactsPath }}
+
+        
   build:
     runs-on: ubuntu-latest
     container: unityci/editor:2020.1.14f1-windows-mono-0
@@ -15,12 +54,17 @@ jobs:
         - name: Activate Unity
           run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/Unity_v2020.x.ulf || exit 0
         
-        # Execute Unit Tests
-        - uses: game-ci/unity-test-runner@v1
-          env:
-            UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        # Run unit tests
+        - uses: game-ci/unity-test-runner@v2
           with:
-            projectPath: .
-            githubToken: ${{ secrets.GITHUB_TOKEN }}
-          
+            githubToken: ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }}
             
+        # Build Windows
+        - name: Build Windows Player
+          run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -buildWindows64Player ./bin-win64/INTBOTS.exe
+        
+        - name: Archive Windows Build
+          uses: actions/upload-artifact@v1
+          with:
+            name: CISampleWin64Binary
+            path: ./bin-win64
