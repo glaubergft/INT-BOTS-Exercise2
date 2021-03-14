@@ -17,8 +17,6 @@ jobs:
         
         # Execute Unit Tests
         - name: Execute Unit Tests
-          uses: game-ci/unity-test-runner@v1
-          with:
-            projectPath: .
-            githubToken: ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }}
+          uses: actions/unity-test-runner@v1
+          
             
