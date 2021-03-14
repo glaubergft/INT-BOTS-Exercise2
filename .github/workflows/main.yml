@@ -18,6 +18,8 @@ jobs:
           - editmode
     steps:
       - name: Update git
+        run: add-apt-repository ppa:git-core/ppa
+      - name: Update git
         run: apt-get update
       - name: Upgrade git
         run: apt-get upgrade -y git
