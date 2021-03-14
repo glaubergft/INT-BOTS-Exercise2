@@ -26,7 +26,7 @@ jobs:
           key: Library-${{ matrix.projectPath }}
           restore-keys: |
             Library-
-      - uses: webbertakken/unity-test-runner@v1.5
+      - uses: webbertakken/unity-test-runner@v1.7
         id: tests
         with:
           projectPath: ${{ matrix.projectPath }}
