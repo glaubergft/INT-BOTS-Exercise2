@@ -16,7 +16,11 @@ jobs:
           run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/Unity_v2020.x.ulf || exit 0
         
         # Execute Unit Tests
-        - name: Execute Unit Tests
-          uses: actions/unity-test-runner@v1
+        - uses: game-ci/unity-test-runner@v2
+          env:
+            UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          with:
+            projectPath: .
+            githubToken: ${{ secrets.GITHUB_TOKEN }}
           
             
