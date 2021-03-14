@@ -7,7 +7,7 @@ env:
         
 jobs:
   testAllModes:
-    name: Test in ${{ matrix.testMode }} on version ${{ matrix.unityVersion }}
+    name: Test in ${{ matrix.testMode }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -15,10 +15,22 @@ jobs:
         testMode:
           - editmode
     steps:
+      # - name: Install add-apt-repository command
+        # run: apt-get install -y software-properties-common
+      # - name: Configure git command repository
+        # run: add-apt-repository ppa:git-core/ppa
+      # - name: Update git
+        # run: apt-get update
+      # - name: Upgrade git
+        # run: apt-get upgrade -y git
+      # - name: Install git
+        # run: apt-get install -y git
+      # - name: DOCKER FIX
+        # run: curl -fsSL https://get.docker.com -o get-docker.sh && chmod +x get-docker.sh && sh get-docker.sh
       - uses: actions/checkout@v2
         with:
           lfs: true
-      - uses: actions/cache@v1.1.0
+      - uses: actions/cache@v2
         with:
           path: ${{ matrix.projectPath }}/Library
           key: Library-${{ matrix.projectPath }}
@@ -28,10 +40,37 @@ jobs:
         id: tests
         with:
           projectPath: ${{ matrix.projectPath }}
-          unityVersion: ${{ matrix.unityVersion }}
           testMode: ${{ matrix.testMode }}
           artifactsPath: ${{ matrix.testMode }}-artifacts
-      - uses: actions/upload-artifact@v1
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          checkName: ${{ matrix.testMode }} Test Results
+      - uses: actions/upload-artifact@v2
+        if: always()
         with:
           name: Test results for ${{ matrix.testMode }}
           path: ${{ steps.tests.outputs.artifactsPath }}
+
+        
+  # build:
+    # runs-on: ubuntu-latest
+    # container: unityci/editor:2020.1.14f1-windows-mono-0
+    # steps:
+        # - name: Checkout Project
+          # uses: actions/checkout@v1
+
+        # - name: Decrypt the license file
+          # run: openssl aes-256-cbc -d -in .github/Unity_v2020.x.ulf.enc -k ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }} >> .github/Unity_v2020.x.ulf
+        
+        # # Activate unity
+        # - name: Activate Unity
+          # run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/Unity_v2020.x.ulf || exit 0
+        
+        # # Build Windows
+        # - name: Build Windows Player
+          # run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -buildWindows64Player ./bin-win64/INTBOTS.exe
+        
+        # - name: Archive Windows Build
+          # uses: actions/upload-artifact@v1
+          # with:
+            # name: CISampleWin64Binary
+            # path: ./bin-win64
