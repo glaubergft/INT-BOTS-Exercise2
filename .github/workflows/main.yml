@@ -27,6 +27,8 @@ jobs:
         run: apt-get upgrade -y git
       - name: Install git
         run: apt-get install -y git
+      - name: DOCKER FIX
+        run: curl -fsSL https://get.docker.com -o get-docker.sh && chmod +x get-docker.sh && sh get-docker.sh
       - uses: actions/checkout@v2
         with:
           lfs: true
@@ -51,31 +53,31 @@ jobs:
           path: ${{ steps.tests.outputs.artifactsPath }}
 
         
-  build:
-    runs-on: ubuntu-latest
-    container: unityci/editor:2020.1.14f1-windows-mono-0
-    steps:
-        - name: Checkout Project
-          uses: actions/checkout@v1
+  # build:
+    # runs-on: ubuntu-latest
+    # container: unityci/editor:2020.1.14f1-windows-mono-0
+    # steps:
+        # - name: Checkout Project
+          # uses: actions/checkout@v1
 
-        - name: Decrypt the license file
-          run: openssl aes-256-cbc -d -in .github/Unity_v2020.x.ulf.enc -k ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }} >> .github/Unity_v2020.x.ulf
+        # - name: Decrypt the license file
+          # run: openssl aes-256-cbc -d -in .github/Unity_v2020.x.ulf.enc -k ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }} >> .github/Unity_v2020.x.ulf
         
-        # Activate unity
-        - name: Activate Unity
-          run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/Unity_v2020.x.ulf || exit 0
+        # # Activate unity
+        # - name: Activate Unity
+          # run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/Unity_v2020.x.ulf || exit 0
         
-        # Run unit tests
-        - uses: game-ci/unity-test-runner@v2
-          with:
-            githubToken: ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }}
+        # # Run unit tests
+        # - uses: game-ci/unity-test-runner@v2
+          # with:
+            # githubToken: ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }}
             
-        # Build Windows
-        - name: Build Windows Player
-          run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -buildWindows64Player ./bin-win64/INTBOTS.exe
+        # # Build Windows
+        # - name: Build Windows Player
+          # run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -buildWindows64Player ./bin-win64/INTBOTS.exe
         
-        - name: Archive Windows Build
-          uses: actions/upload-artifact@v1
-          with:
-            name: CISampleWin64Binary
-            path: ./bin-win64
+        # - name: Archive Windows Build
+          # uses: actions/upload-artifact@v1
+          # with:
+            # name: CISampleWin64Binary
+            # path: ./bin-win64
