@@ -33,7 +33,6 @@ jobs:
         with:
           lfs: true
       - uses: game-ci/unity-test-runner@results-check
-      - uses: game-ci/unity-test-runner@v2.0-alpha-3
         id: tests
         with:
           projectPath: ${{ matrix.projectPath }}
