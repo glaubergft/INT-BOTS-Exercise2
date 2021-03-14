@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
+[assembly: InternalsVisibleTo("EditMode")]
 public class Player : MonoBehaviour
 {
     #region STATIC AREA
@@ -74,11 +76,11 @@ public class Player : MonoBehaviour
     {
         get
         {
-            return view.IsMine || !PhotonNetwork.IsConnected;
+            return !PhotonNetwork.IsConnected || view.IsMine;
         }
     }
 
-    private void Awake()
+    internal void Awake()
     {
         gameManagerObj = FindObjectOfType<GameManager>();
         view = GetComponent<PhotonView>();
@@ -138,7 +140,7 @@ public class Player : MonoBehaviour
     {
         StartCoroutine(TakeHit_FX());
 
-        if (!view.IsMine && !broadcasting)
+        if (view.Owner != null && !view.IsMine && !broadcasting)
             return;
         
         if (takenHits.Contains(projectileId))
@@ -147,7 +149,8 @@ public class Player : MonoBehaviour
         takenHits.Add(projectileId);
         StartCoroutine(RemoveHitFromLog(projectileId));
 
-        view.RPC("BroadcastHit", RpcTarget.Others, projectileId, projectileAuthorActorNumber, hitType);
+        if (view.Owner != null)
+            view.RPC("BroadcastHit", RpcTarget.Others, projectileId, projectileAuthorActorNumber, hitType);
 
         gameManagerObj?.ComputeScoreHit(projectileAuthorActorNumber, hitType);
         cameraShakeObj?.Shake();
@@ -163,6 +166,9 @@ public class Player : MonoBehaviour
 
     IEnumerator TakeHit_FX()
     {
+        if (customRendererArray == null)
+            yield break;
+
         foreach (var renderer in customRendererArray)
         {
             renderer.material.SetColor("_EmissionColor", emissionColorWhenHit);

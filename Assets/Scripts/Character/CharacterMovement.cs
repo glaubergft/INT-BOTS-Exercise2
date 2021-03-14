@@ -6,7 +6,6 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     #region Serialized Fields
-
     [SerializeField]
     private float groundLeaveWaitCheck = 0.2f;
 
@@ -79,6 +78,9 @@ public class CharacterMovement : MonoBehaviour
 
 
     internal float InitialRotationY = 0;
+
+    public bool IsJumping { get => isJumping; }
+    
 
     private void Awake()
     {

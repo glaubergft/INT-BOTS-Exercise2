@@ -99,7 +99,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        disableCamera.SetActive(false);
+        if (disableCamera != null)
+            disableCamera.SetActive(false);
         InvokeRepeating(nameof(UpdateTimer), 0, 1);
     }
 
@@ -110,7 +111,7 @@ public class GameManager : MonoBehaviour
 
     private void CheckInput()
     {
-        if (Input.GetButtonDown("Cancel") && Panel.CheckAllPanelsAreClosed())
+        if (Input.GetButtonDown("Cancel") && Panel.CheckAllPanelsAreClosed() && buttonClickSFX != null)
         {
             buttonClickSFX?.Play();
             Panel.Open<PanelOptions>();
