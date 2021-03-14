@@ -17,4 +17,4 @@ jobs:
         
         # Execute Unit Tests
         - name: Execute Unit Tests
-          uses: game-ci/unity-test-runner@v2
+          uses: actions/unity-test-runner@v2
