@@ -17,6 +17,8 @@ jobs:
           - playmode
           - editmode
     steps:
+      - name: Update git
+        run: apt-get install git=2.18
       - uses: actions/checkout@v2
         with:
           lfs: true
