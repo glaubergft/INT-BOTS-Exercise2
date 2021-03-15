@@ -28,12 +28,11 @@ namespace Tests
             player = GameObject.Find("Player").GetComponent<Player>();
             healthBar = GameObject.Find("HealthBar").GetComponent<Image>();
             player.Awake();
-
             float initialHealthAmount = healthBar.fillAmount;
             var projectileObj = new Projectile();
             player.TakeHit(projectileObj, HitType.Body);
             float currentHealthAmount = healthBar.fillAmount;
-            Assert.AreEqual(0.19f, currentHealthAmount, "Health should be decreased by 10%");
+            Assert.AreEqual(0.9f, currentHealthAmount, "Health should be decreased by 10%");
             yield return null;
         }
 
