@@ -21,10 +21,11 @@ jobs:
         # - name: Activate Unity
           # run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/Unity_v2020.x.ulf || exit 0
         
-        # Activate unity - step 1
-        - name: Activate Unity - step 1
-          run: echo '${{ secrets.UNITY_LICENSE }}' > UnityLicenseFile.ulf
+        # Generate Unity License File
+        - name: Generate Unity License File
+          run: echo '${{ secrets.UNITY_LICENSE }}' > .github/UnityLicenseFile.ulf
         
+        # Activate unity
         - name: Activate Unity
           run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/UnityLicenseFile.ulf || exit 0
           
