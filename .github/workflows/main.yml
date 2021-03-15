@@ -50,13 +50,20 @@ jobs:
         - name: Checkout Project
           uses: actions/checkout@v1
 
-        - name: Decrypt the license file
-          run: openssl aes-256-cbc -d -in .github/Unity_v2020.x.ulf.enc -k ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }} >> .github/Unity_v2020.x.ulf
+        # - name: Decrypt the license file
+          # run: openssl aes-256-cbc -d -in .github/Unity_v2020.x.ulf.enc -k ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }} >> .github/Unity_v2020.x.ulf
         
-        # Activate unity
+        # # Activate unity
+        # - name: Activate Unity
+          # run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/Unity_v2020.x.ulf || exit 0
+        
+        # Activate unity - step 1
+        - name: Activate Unity - step 1
+          run: echo '${{ secrets.UNITY_LICENSE_DECRYPT_KEY }}' >> License.ulf
+        
         - name: Activate Unity
-          run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/Unity_v2020.x.ulf || exit 0
-        
+          run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/License.ulf || exit 0
+          
         # Build Windows
         - name: Build Windows Player
           run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -buildWindows64Player ./bin-win64/INTBOTS.exe
