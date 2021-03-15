@@ -23,7 +23,7 @@ jobs:
         
         # Activate unity - step 1
         - name: Activate Unity - step 1
-          run: echo '${{ secrets.UNITY_LICENSE_DECRYPT_KEY }}' >> License.ulf
+          run: echo '${{ secrets.UNITY_LICENSE }}' >> License.ulf
         
         - name: Activate Unity
           run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/License.ulf || exit 0
