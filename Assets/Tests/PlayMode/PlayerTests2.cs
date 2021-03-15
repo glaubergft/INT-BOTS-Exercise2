@@ -33,7 +33,7 @@ namespace Tests
             var projectileObj = new Projectile();
             player.TakeHit(projectileObj, HitType.Body);
             float currentHealthAmount = healthBar.fillAmount;
-            Assert.AreEqual(0.9f, currentHealthAmount, "Health should be decreased by 10%");
+            Assert.AreEqual(0.19f, currentHealthAmount, "Health should be decreased by 10%");
             yield return null;
         }
 
