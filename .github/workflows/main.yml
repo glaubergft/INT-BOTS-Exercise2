@@ -15,7 +15,7 @@ jobs:
         projectPath:
             - ./
         testMode:
-          - editmode
+          - playmode
     steps:
       # - name: Install add-apt-repository command
         # run: apt-get install -y software-properties-common
