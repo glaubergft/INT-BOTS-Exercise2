@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Tests
 {
-    public class PlayerTests 
+    public class PlayerTests2
     {
         Player player;
         Image healthBar;
@@ -16,7 +16,7 @@ namespace Tests
         [SetUp]
         public void Setup()
         {
-            //SceneManager.LoadScene("TestArena");
+            SceneManager.LoadScene("TestArena");
             
         }
 
@@ -25,11 +25,15 @@ namespace Tests
         [UnityTest]
         public IEnumerator ReceiveBodyShotTest()
         {
-            //float initialHealthAmount = healthBar.fillAmount;
-            //var projectileObj = new Projectile();
-            //player.TakeHit(projectileObj, HitType.Body);
-            //float currentHealthAmount = healthBar.fillAmount;
-            //Assert.AreEqual(0.9f, currentHealthAmount, "Health should be decreased by 10%");
+            player = GameObject.Find("Player").GetComponent<Player>();
+            healthBar = GameObject.Find("HealthBar").GetComponent<Image>();
+            player.Awake();
+
+            float initialHealthAmount = healthBar.fillAmount;
+            var projectileObj = new Projectile();
+            player.TakeHit(projectileObj, HitType.Body);
+            float currentHealthAmount = healthBar.fillAmount;
+            Assert.AreEqual(0.9f, currentHealthAmount, "Health should be decreased by 10%");
             yield return null;
         }
 

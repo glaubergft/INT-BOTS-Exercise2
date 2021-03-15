@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [assembly: InternalsVisibleTo("EditMode")]
+[assembly: InternalsVisibleTo("PlayMode")]
 public class Player : MonoBehaviour
 {
     #region STATIC AREA
