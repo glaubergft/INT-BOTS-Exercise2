@@ -1,14 +1,6 @@
 name: CI
 
-on: 
-  # Trigger the workflow on push or pull request,
-  # but only for the main branch
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+on: [push]
 
 env:
     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -48,21 +40,24 @@ jobs:
         with:
           name: Test results for ${{ matrix.testMode }}
           path: ${{ steps.tests.outputs.artifactsPath }}
-          
+
+        
   build:
     needs: unitTesting
     runs-on: ubuntu-latest
     container: unityci/editor:2020.1.14f1-windows-mono-0
     steps:
         - name: Checkout Project
-          uses: actions/checkout@v2
+          uses: actions/checkout@v1
 
-        - name: Generate Unity License File
-          run: echo '${{ secrets.UNITY_LICENSE }}' > .github/UnityLicenseFile.ulf
+        - name: Decrypt the license file
+          run: openssl aes-256-cbc -d -in .github/Unity_v2020.x.ulf.enc -k ${{ secrets.UNITY_LICENSE_DECRYPT_KEY }} >> .github/Unity_v2020.x.ulf
         
+        # Activate unity
         - name: Activate Unity
-          run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/UnityLicenseFile.ulf || exit 0
+          run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -manualLicenseFile .github/Unity_v2020.x.ulf || exit 0
           
+        # Build Windows
         - name: Build Windows Player
           run: /opt/unity/Editor/Unity -quit -batchmode -nographics -silent-crashes -logFile -projectPath . -buildWindows64Player ./bin-win64/INTBOTS.exe
         
